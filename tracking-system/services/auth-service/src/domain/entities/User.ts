@@ -1,37 +1,36 @@
 export interface User {
   id: string;
   email: string;
-  hashedPassword: string;
-  permissions: string[];
-  createdAt: Date;
+  password: string;
+  firstName: string;
+  lastName: string;
+  role: UserRole;
   isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-export interface PublicUser {
-  id: string;
+export enum UserRole {
+  ADMIN = 'admin',
+  MANAGER = 'manager',
+  OPERATOR = 'operator',
+  CUSTOMER = 'customer'
+}
+
+export interface CreateUserRequest {
   email: string;
-  permissions: string[];
+  password: string;
+  firstName: string;
+  lastName: string;
+  role: UserRole;
 }
 
-export class UserEntity implements User {
-  constructor(
-    public readonly id: string,
-    public readonly email: string,
-    public readonly hashedPassword: string,
-    public readonly permissions: string[],
-    public readonly createdAt: Date,
-    public readonly isActive: boolean
-  ) {}
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
 
-  toPublic(): PublicUser {
-    return {
-      id: this.id,
-      email: this.email,
-      permissions: this.permissions
-    };
-  }
-
-  hasPermission(permission: string): boolean {
-    return this.permissions.includes(permission);
-  }
+export interface AuthResponse {
+  user: Omit<User, 'password'>;
+  token: string;
 }

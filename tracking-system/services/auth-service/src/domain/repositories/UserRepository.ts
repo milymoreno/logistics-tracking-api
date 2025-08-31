@@ -1,8 +1,9 @@
-import { User } from '../entities/User';
+import { User, CreateUserRequest } from '../entities/User';
 
 export interface UserRepository {
-  findByEmail(email: string): Promise<User | null>;
   findById(id: string): Promise<User | null>;
-  create(user: Omit<User, 'id' | 'createdAt'>): Promise<User>;
-  updateLastLogin(userId: string): Promise<void>;
+  findByEmail(email: string): Promise<User | null>;
+  create(userData: CreateUserRequest): Promise<User>;
+  update(id: string, userData: Partial<User>): Promise<User | null>;
+  delete(id: string): Promise<boolean>;
 }
