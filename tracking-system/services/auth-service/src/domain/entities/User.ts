@@ -1,13 +1,11 @@
 export interface User {
   id: string;
   email: string;
-  password: string;
-  firstName: string;
-  lastName: string;
-  role: UserRole;
+  hashedPassword: string;
+  permissions: string[];
   isActive: boolean;
+  lastLogin: Date | null;
   createdAt: Date;
-  updatedAt: Date;
 }
 
 export enum UserRole {
@@ -20,9 +18,10 @@ export enum UserRole {
 export interface CreateUserRequest {
   email: string;
   password: string;
-  firstName: string;
-  lastName: string;
-  role: UserRole;
+  firstName?: string;
+  lastName?: string;
+  role?: UserRole;
+  permissions?: string[];
 }
 
 export interface LoginRequest {
