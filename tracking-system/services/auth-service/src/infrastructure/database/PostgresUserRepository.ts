@@ -47,7 +47,7 @@ export class PostgresUserRepository implements UserRepository {
       id,
       userData.email,
       hashedPassword,
-      userData.permissions ?? [], 
+      userData.permissions ?? [], // <-- SOLO el array, no JSON.stringify
       true,
       now
     ];
@@ -71,7 +71,7 @@ export class PostgresUserRepository implements UserRepository {
     }
     if ('permissions' in userData && userData.permissions !== undefined) {
       fields.push(`permissions = $${paramCount++}`);
-      values.push(userData.permissions);
+      values.push(userData.permissions); // <-- SOLO el array
     }
     if (userData.isActive !== undefined) {
       fields.push(`is_active = $${paramCount++}`);
