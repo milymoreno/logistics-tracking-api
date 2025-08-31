@@ -41,3 +41,4 @@ Thumbs.db
 # Test
 test-results/
 tracking-system/services/auth-service/node_modules
+tracking-system/services/auth-service/.env
