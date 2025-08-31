@@ -7,8 +7,8 @@ WORKDIR /app
 COPY package*.json ./
 COPY tsconfig.json ./
 
-# Install dependencies
-RUN npm ci --only=production
+# Install dependencies (dev + prod) en la etapa de build
+RUN npm ci
 
 # Copy source code
 COPY src/ ./src/
@@ -21,23 +21,21 @@ FROM node:22-alpine AS production
 
 WORKDIR /app
 
-# Install curl for health checks
-RUN apk add --no-cache curl
+# Instala curl y solo dependencias de producción
+RUN apk add --no-cache curl && npm ci --only=production
 
-# Copy built application
+# Copia la app compilada y dependencias
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./
 
-# Create non-root user
-RUN addgroup -g 1001 -S nodejs && \
-    adduser -S nodejs -u 1001
+# Crea usuario no root
+RUN addgroup -g 1001 nodejs && adduser -D -u 1001 -G nodejs nodejs
 
 USER nodejs
 
 EXPOSE 3000
 
-# Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD curl -f http://localhost:3000/health || exit 1
 
