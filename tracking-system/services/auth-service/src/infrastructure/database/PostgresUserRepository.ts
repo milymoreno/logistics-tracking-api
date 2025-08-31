@@ -15,6 +15,7 @@ export class PostgresUserRepository implements UserRepository {
 
   async findById(id: string): Promise<User | null> {
     const query = 'SELECT * FROM users WHERE id = $1 AND is_active = true';
+    console.log('findById QUERY:', query, 'VALUES:', [id]); 
     const result = await this.pool.query(query, [id]);
     if (result.rows.length === 0) {
       return null;
@@ -46,7 +47,7 @@ export class PostgresUserRepository implements UserRepository {
       id,
       userData.email,
       hashedPassword,
-      [],
+      userData.permissions ?? [], 
       true,
       now
     ];
