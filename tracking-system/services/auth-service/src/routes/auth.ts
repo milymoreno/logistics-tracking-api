@@ -86,7 +86,18 @@ export async function authRoutes(app: FastifyInstance) {
       tags: ['users'],
       params: { type: 'object', properties: { id: { type: 'string' } }, required: ['id'] },
       response: {
-        200: { type: 'object' },
+        200: {
+          type: 'object',
+          properties: {
+            id: { type: 'string' },
+            email: { type: 'string' },
+            hashedPassword: { type: 'string' },
+            permissions: { type: 'array', items: { type: 'string' } },
+            isActive: { type: 'boolean' },
+            lastLogin: { type: ['string', 'null'], format: 'date-time' },
+            createdAt: { type: 'string', format: 'date-time' }
+          }
+        },
         404: { type: 'object', properties: { message: { type: 'string' } } }
       }
     }
