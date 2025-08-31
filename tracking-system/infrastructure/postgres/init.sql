@@ -1,7 +1,7 @@
 -- Database initialization script for Tracking System
 
 -- Create extensions
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+-- CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- States catalog
 CREATE TABLE states (
@@ -92,9 +92,9 @@ CREATE TABLE users (
 );
 
 -- Insert default user for testing
-INSERT INTO users (email, hashed_password, permissions) VALUES
-('admin@tracking.com', '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj0kB0qBpG2O', ARRAY['tracking:read', 'tracking:write', 'admin:all']);
--- Password is: admin123
+-- INSERT INTO users (email, hashed_password, permissions) VALUES
+-- ('admin@tracking.com', '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj0kB0qBpG2O', ARRAY['tracking:read', 'tracking:write', 'admin:all']);
+-- -- Password is: admin123
 
 -- Indexes for performance
 CREATE INDEX idx_shipments_shipment_id ON shipments(shipment_id);
@@ -104,7 +104,7 @@ CREATE INDEX idx_unit_checkpoint_log_unit_id ON unit_checkpoint_log(unit_id);
 CREATE INDEX idx_unit_checkpoint_log_timestamp ON unit_checkpoint_log(checkpoint_timestamp);
 CREATE INDEX idx_unit_current_state_state_id ON unit_current_state(state_id);
 CREATE INDEX idx_shipment_current_state_state_id ON shipment_current_state(state_id);
-CREATE INDEX idx_users_email ON users(email);
+-- CREATE INDEX idx_users_email ON users(email);
 
 -- Triggers for updated_at
 CREATE OR REPLACE FUNCTION update_updated_at_column()

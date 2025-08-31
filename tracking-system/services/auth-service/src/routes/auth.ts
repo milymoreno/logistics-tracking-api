@@ -8,6 +8,8 @@ import { PostgresUserRepository } from '../infrastructure/database/PostgresUserR
 const pool = createDatabaseConnection();
 const userRepository = new PostgresUserRepository(pool);
 
+
+
 export async function authRoutes(app: FastifyInstance) {
   // Login
   app.post('/login', {
@@ -38,11 +40,17 @@ export async function authRoutes(app: FastifyInstance) {
     const signOptions: jwt.SignOptions = {
          expiresIn: config.jwt.expiresIn ? parseInt(config.jwt.expiresIn) : 86400
     };
+
+    const jwtSecret = config.jwt.secret;
+    if (!jwtSecret) {
+      throw new Error('JWT_SECRET is not defined in environment variables');
+    }
     const token = jwt.sign(
       { userId: user.id, email: user.email },
-      config.jwt.secret,
+      jwtSecret,
       signOptions
-    );
+    );    
+
     return { token };
   });
 
