@@ -58,6 +58,29 @@ services:
       timeout: 5s
       retries: 5
 
+  # Microservicio de Tracking
+  tracking-service:
+    build:
+      context: ../services/core-service/core-traking
+      dockerfile: Dockerfile
+    container_name: tracking-service
+    depends_on:
+      - postgres
+      - vault
+    environment:
+      DB_USERNAME: tracking_user
+      DB_PASSWORD: tracking_pass
+      DB_URL: jdbc:postgresql://postgres:5432/tracking_db
+      VAULT_URL: http://vault:8200
+      VAULT_TOKEN: dev-token-123
+    ports:
+      - "8081:8081"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/api/v1/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
   # Redis for caching and idempotency
   redis:
     image: redis:7-alpine
