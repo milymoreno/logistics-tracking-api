@@ -1,0 +1,16 @@
+@startuml
+!include <C4/C4_Context>
+
+Person(user, "Usuario", "Persona que usa la plataforma para autenticarse y operar el sistema logístico")
+
+System(auth, "Auth MicroService", "Sistema de autenticación y autorización. Gestiona usuarios y emite tokens JWT.")
+System(core, "Core MicroService", "Sistema principal de negocio. Orquesta procesos logísticos y operaciones de la plataforma.")
+
+Rel(user, auth, "Solicita autenticación y registro\n(envía credenciales)")
+Rel(auth, core, "Envía el ID del usuario autenticado mediante JWT\n(autorización de operaciones)")
+Rel(user, core, "Realiza operaciones logísticas\n(una vez autenticado)")
+
+SHOW_FLOATING_LEGEND()
+Lay_Distance(LEGEND(), e, 1)
+
+@enduml

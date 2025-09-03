@@ -1,0 +1,28 @@
+@startuml
+!include <C4/C4_Component>
+
+ContainerDb(authdb, "Auth PostgreSQL", "PostgreSQL", "Base de datos exclusiva para autenticación y usuarios")
+
+Container_Boundary(auth, "Auth MicroService") {
+    Component(routes, "AuthRoutes", "Express Router", "Define las rutas HTTP de autenticación y registro")
+    Component(authService, "AuthService", "Dominio", "Lógica de autenticación, autorización y generación de tokens JWT")
+    Component(userRepo, "UserRepository", "Dominio", "Interfaz para persistencia de usuarios")
+    Component(pgUserRepo, "PostgresUserRepository", "Infraestructura", "Implementación de UserRepository usando PostgreSQL")
+    Component(jwtService, "JwtAuthService", "Infraestructura", "Genera y valida tokens JWT")
+    Component(vaultClient, "VaultClient", "Infraestructura", "Obtiene el secreto JWT desde Vault para firmar tokens")
+    Component(config, "Config", "Infraestructura", "Gestión de variables y configuración")
+}
+
+Rel(routes, authService, "Invoca lógica de autenticación")
+Rel(authService, userRepo, "Usa interfaz de repositorio")
+Rel(userRepo, pgUserRepo, "Implementado por")
+Rel(authService, jwtService, "Genera y valida JWT")
+Rel(jwtService, vaultClient, "Obtiene secreto para firmar tokens")
+Rel(pgUserRepo, authdb, "Lee/Escribe datos de usuario", "PostgreSQL")
+Rel(authService, config, "Lee configuración")
+Rel(jwtService, config, "Lee configuración")
+Rel(vaultClient, config, "Lee configuración")
+
+SHOW_FLOATING_LEGEND()
+
+@enduml

@@ -21,8 +21,8 @@ FROM node:22-alpine AS production
 
 WORKDIR /app
 
-# Instala curl y solo dependencias de producción
-RUN apk add --no-cache curl && npm ci --only=production
+# Instala curl
+RUN apk add --no-cache curl
 
 # Copia la app compilada y dependencias
 COPY --from=builder /app/dist ./dist

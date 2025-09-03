@@ -12,8 +12,8 @@ services:
       VAULT_DEV_LISTEN_ADDRESS: "0.0.0.0:8200"
     cap_add:
       - IPC_LOCK
-    volumes:
-      - ./vault/init.sh:/vault/init.sh
+    # volumes:
+    #   - ./vault/init.sh:/vault/init.sh   # <--- Comentado para evitar error si no existe
     command: ["vault", "server", "-dev"]
     healthcheck:
       test: ["CMD", "vault", "status"]
@@ -26,7 +26,7 @@ services:
     image: postgres:15-alpine
     container_name: tracking-postgres
     ports:
-      - "5432:5432"
+      - "55432:5432"
     environment:
       POSTGRES_DB: tracking_db
       POSTGRES_USER: tracking_user
@@ -36,6 +36,24 @@ services:
       - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U tracking_user -d tracking_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # PostgreSQL Database for Auth Service
+  auth-postgres:
+    image: postgres:15-alpine
+    container_name: tracking-auth-postgres
+    ports:
+      - "55433:5432"  # Usa un puerto diferente al de la otra base
+    environment:
+      POSTGRES_DB: auth_db
+      POSTGRES_USER: auth_user
+      POSTGRES_PASSWORD: auth_pass
+    volumes:
+      - auth_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U auth_user -d auth_db"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -68,8 +86,15 @@ services:
       VAULT_ENDPOINT: http://vault:8200
       VAULT_TOKEN: dev-token-123
       VAULT_SECRET_PATH: secret/jwt-keys
+      DB_HOST: auth-postgres
+      DB_PORT: 5432
+      DB_NAME: auth_db
+      DB_USER: auth_user
+      DB_PASSWORD: auth_pass
     depends_on:
       vault:
+        condition: service_healthy
+      auth-postgres:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
@@ -125,6 +150,7 @@ services:
 volumes:
   postgres_data:
   redis_data:
+  auth_postgres_data:
 
 networks:
   default:

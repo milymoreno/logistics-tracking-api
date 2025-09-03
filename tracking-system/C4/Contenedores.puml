@@ -1,0 +1,29 @@
+@startuml
+!include <C4/C4_Container>
+
+Person(user, "Usuario", "Interactúa con la plataforma de tracking")
+
+System_Boundary(tracking, "Logistics Tracking Platform") {
+  Container(api, "API Gateway", "Nginx", "Enrutamiento y balanceo de peticiones HTTP")
+  Container(auth, "Auth MicroService", "Node.js + Express + JWT", "Autenticación, autorización y gestión de usuarios")
+  Container(core, "Core MicroService", "Quarkus (Java)", "Lógica de negocio principal y orquestación de procesos")
+  ContainerDb(db, "PostgreSQL", "Base de datos principal para operaciones del core")
+  ContainerDb(authdb, "Auth PostgreSQL", "Base de datos exclusiva para autenticación y usuarios")
+  Container(redis, "Redis", "Cache", "Cache, sesiones e idempotencia")
+  Container(vault, "Vault", "HashiCorp Vault", "Gestión centralizada de secretos y llaves JWT")
+}
+
+Rel(user, api, "Realiza peticiones HTTP")
+Rel(api, auth, "Redirige login/registro y validación de tokens")
+Rel(api, core, "Redirige operaciones de negocio")
+Rel(core, db, "Lee/Escribe datos de negocio")
+Rel(core, redis, "Lee/Escribe cache")
+Rel(auth, vault, "Obtiene secreto JWT")
+Rel(core, vault, "Obtiene secretos (si aplica)")
+Rel(auth, authdb, "Lee/Escribe usuarios y credenciales")
+Rel(core, auth, "Valida JWT y roles de usuario\n(consulta endpoints de Auth)")
+
+SHOW_FLOATING_LEGEND()
+Lay_Distance(LEGEND(), e, 1)
+
+@enduml

@@ -30,6 +30,6 @@ export interface LoginRequest {
 }
 
 export interface AuthResponse {
-  user: Omit<User, 'password'>;
+  user: Omit<User, 'hashedPassword'>;
   token: string;
 }
