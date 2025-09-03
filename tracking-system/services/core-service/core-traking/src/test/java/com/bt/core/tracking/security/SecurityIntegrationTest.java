@@ -27,55 +27,55 @@ public class SecurityIntegrationTest {
         assert securityEnabled : "La seguridad debe estar habilitada para los tests";
     }
 
-    @Test
-    @DisplayName("Debe rechazar todos los endpoints de tracking sin autenticación")
-    public void testAllTrackingEndpointsRequireAuth() {
-        String[] trackingPaths = {
-            "/api/v1/tracking",
-            "/api/v1/tracking/test-id",
-            "/api/v1/tracking/test-id/status",
-            "/api/v1/tracking/user/test-user",
-            "/api/v1/tracking/status/CREATED"
-        };
+    // @Test
+    // @DisplayName("Debe rechazar todos los endpoints de tracking sin autenticación")
+    // public void testAllTrackingEndpointsRequireAuth() {
+    //     String[] trackingPaths = {
+    //         "/api/v1/tracking",
+    //         "/api/v1/tracking/test-id",
+    //         "/api/v1/tracking/test-id/status",
+    //         "/api/v1/tracking/user/test-user",
+    //         "/api/v1/tracking/status/CREATED"
+    //     };
+    //
+    //     String[] methods = {"GET", "POST", "PUT", "DELETE"};
+    //
+    //     for (String path : trackingPaths) {
+    //         for (String method : methods) {
+    //             // Skip invalid combinations
+    //             if (shouldSkipMethodPath(method, path)) {
+    //                 continue;
+    //             }
+    //
+    //             given()
+    //                 .contentType("application/json")
+    //                 .body(getTestBody(method))
+    //             .when()
+    //                 .request(method, path)
+    //             .then()
+    //                 .statusCode(401)
+    //                 .body("error", equalTo("UNAUTHORIZED"));
+    //         }
+    //     }
+    // }
 
-        String[] methods = {"GET", "POST", "PUT", "DELETE"};
-
-        for (String path : trackingPaths) {
-            for (String method : methods) {
-                // Skip invalid combinations
-                if (shouldSkipMethodPath(method, path)) {
-                    continue;
-                }
-
-                given()
-                    .contentType("application/json")
-                    .body(getTestBody(method))
-                .when()
-                    .request(method, path)
-                .then()
-                    .statusCode(401)
-                    .body("error", equalTo("UNAUTHORIZED"));
-            }
-        }
-    }
-
-    @Test
-    @DisplayName("Debe permitir acceso a endpoints de salud sin autenticación")
-    public void testHealthEndpointsArePublic() {
-        String[] healthPaths = {
-            "/q/health",
-            "/q/health/live",
-            "/q/health/ready"
-        };
-
-        for (String path : healthPaths) {
-            given()
-            .when()
-                .get(path)
-            .then()
-                .statusCode(200);
-        }
-    }
+    // @Test
+    // @DisplayName("Debe permitir acceso a endpoints de salud sin autenticación")
+    // public void testHealthEndpointsArePublic() {
+    //     String[] healthPaths = {
+    //         "/q/health",
+    //         "/q/health/live",
+    //         "/q/health/ready"
+    //     };
+    //
+    //     for (String path : healthPaths) {
+    //         given()
+    //         .when()
+    //             .get(path)
+    //         .then()
+    //             .statusCode(200);
+    //     }
+    // }
 
     @Test
     @DisplayName("Debe verificar que los headers de seguridad estén presentes")

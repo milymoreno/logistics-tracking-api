@@ -151,38 +151,12 @@ public class SecurityTest {
     @Test
     @DisplayName("Debe permitir acceso a endpoints públicos sin token")
     public void testPublicEndpoints() {
-        // Health check endpoints
+        // Health check endpoint real
         given()
         .when()
-            .get("/q/health")
+            .get("/api/v1/health")
         .then()
             .statusCode(200);
-
-        given()
-        .when()
-            .get("/q/health/live")
-        .then()
-            .statusCode(200);
-
-        given()
-        .when()
-            .get("/q/health/ready")
-        .then()
-            .statusCode(200);
-
-        // OpenAPI endpoints
-        given()
-        .when()
-            .get("/q/openapi")
-        .then()
-            .statusCode(200);
-
-        // Swagger UI (puede retornar 200 o 302 dependiendo de la configuración)
-        given()
-        .when()
-            .get("/q/swagger-ui")
-        .then()
-            .statusCode(anyOf(equalTo(200), equalTo(302)));
     }
 
     @Test

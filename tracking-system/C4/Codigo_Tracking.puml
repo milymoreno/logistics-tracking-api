@@ -1,0 +1,45 @@
+@startuml Codigo_Tracking
+!include <C4/C4_Code>
+
+' Diagrama de clases principales para el Tracking/Core MicroService
+
+Package("com.bt.core.tracking.infrastructure.entrypoints.rest", "Entrypoints REST") {
+  Class(TrackingRestController, "TrackingRestController", "Expone endpoints HTTP para tracking")
+}
+
+Package("com.bt.core.tracking.application", "Aplicación") {
+  Class(TrackingApplicationService, "TrackingApplicationService", "Orquesta casos de uso de tracking")
+}
+
+Package("com.bt.core.tracking.domain.model", "Dominio - Modelo") {
+  Class(Tracking, "Tracking", "Entidad principal de tracking")
+  Class(Event, "Event", "Entidad de evento logístico")
+}
+
+Package("com.bt.core.tracking.domain.service", "Dominio - Servicio") {
+  Class(TrackingDomainService, "TrackingDomainService", "Lógica de negocio de tracking")
+}
+
+Package("com.bt.core.tracking.domain.ports", "Dominio - Puertos") {
+  Interface(TrackingRepository, "TrackingRepository", "Interfaz para persistencia de tracking")
+}
+
+Package("com.bt.core.tracking.infrastructure.adapters.persistence", "Infraestructura - Persistencia") {
+  Class(PostgresTrackingRepository, "PostgresTrackingRepository", "Implementación de TrackingRepository usando PostgreSQL")
+}
+
+Package("com.bt.core.tracking.infrastructure.configuration", "Infraestructura - Configuración") {
+  Class(Config, "Config", "Gestión de configuración")
+}
+
+Rel(TrackingRestController, TrackingApplicationService, "Invoca casos de uso")
+Rel(TrackingApplicationService, TrackingDomainService, "Orquesta lógica de negocio")
+Rel(TrackingDomainService, TrackingRepository, "Usa interfaz de repositorio")
+Rel(TrackingRepository, PostgresTrackingRepository, "Implementado por")
+Rel(PostgresTrackingRepository, Tracking, "Mapea entidades")
+Rel(TrackingApplicationService, Tracking, "Usa entidad Tracking")
+Rel(TrackingDomainService, Event, "Usa entidad Event")
+Rel(TrackingApplicationService, Config, "Lee configuración")
+Rel(PostgresTrackingRepository, Config, "Lee configuración")
+
+@enduml

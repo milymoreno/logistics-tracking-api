@@ -1,0 +1,32 @@
+@startuml Codigo_Auth
+!include <C4/C4_Code>
+
+' Diagrama de clases principales para el Auth MicroService
+
+Package("auth.routes", "Entrypoints REST") {
+  Class(AuthRoutes, "AuthRoutes", "Define rutas HTTP de autenticación y registro")
+}
+
+Package("auth.domain", "Dominio") {
+  Class(AuthService, "AuthService", "Lógica de autenticación, autorización y generación de tokens JWT")
+  Interface(UserRepository, "UserRepository", "Interfaz para persistencia de usuarios")
+}
+
+Package("auth.infrastructure", "Infraestructura") {
+  Class(PostgresUserRepository, "PostgresUserRepository", "Implementación de UserRepository usando PostgreSQL")
+  Class(JwtAuthService, "JwtAuthService", "Genera y valida tokens JWT")
+  Class(VaultClient, "VaultClient", "Obtiene el secreto JWT desde Vault para firmar tokens")
+  Class(Config, "Config", "Gestión de variables y configuración")
+}
+
+Rel(AuthRoutes, AuthService, "Invoca lógica de autenticación")
+Rel(AuthService, UserRepository, "Usa interfaz de repositorio")
+Rel(UserRepository, PostgresUserRepository, "Implementado por")
+Rel(AuthService, JwtAuthService, "Genera y valida JWT")
+Rel(JwtAuthService, VaultClient, "Obtiene secreto para firmar tokens")
+Rel(PostgresUserRepository, Config, "Lee configuración")
+Rel(AuthService, Config, "Lee configuración")
+Rel(JwtAuthService, Config, "Lee configuración")
+Rel(VaultClient, Config, "Lee configuración")
+
+@enduml

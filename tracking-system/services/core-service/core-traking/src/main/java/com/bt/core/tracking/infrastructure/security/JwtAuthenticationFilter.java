@@ -34,12 +34,13 @@ public class JwtAuthenticationFilter implements ContainerRequestFilter {
 
     // Endpoints que no requieren autenticación
     private static final Set<String> PUBLIC_PATHS = Set.of(
-            "/q/health",
-            "/q/health/live",
-            "/q/health/ready",
-            "/q/swagger-ui",
-            "/q/openapi",
-            "/swagger-ui"
+        "/q/health",
+        "/q/health/live",
+        "/q/health/ready",
+        "/q/swagger-ui",
+        "/q/openapi",
+        "/swagger-ui",
+        "/api/v1/health"
     );
 
     @Override

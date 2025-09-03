@@ -1,0 +1,28 @@
+@startuml
+!include <C4/C4_Component>
+
+ContainerDb(trackingdb, "Tracking PostgreSQL", "PostgreSQL", "Base de datos principal para operaciones logísticas y tracking")
+
+Container_Boundary(core, "Tracking/Core MicroService") {
+    Component(rest, "TrackingRestController", "REST Controller", "Expone endpoints HTTP para operaciones de tracking y consulta de eventos")
+    Component(appService, "TrackingApplicationService", "Aplicación", "Orquesta casos de uso y lógica de aplicación para tracking")
+    Component(domainService, "TrackingDomainService", "Dominio", "Lógica de negocio central para operaciones de tracking")
+    Component(model, "TrackingModel", "Dominio", "Entidades y objetos de valor del dominio logístico")
+    Component(repo, "TrackingRepository", "Dominio", "Interfaz para persistencia de eventos y estados de tracking")
+    Component(pgRepo, "PostgresTrackingRepository", "Infraestructura", "Implementación de TrackingRepository usando PostgreSQL")
+    Component(config, "Config", "Infraestructura", "Gestión de variables y configuración")
+}
+
+Rel(rest, appService, "Invoca casos de uso de tracking")
+Rel(appService, domainService, "Orquesta lógica de negocio")
+Rel(domainService, repo, "Usa interfaz de repositorio")
+Rel(repo, pgRepo, "Implementado por")
+Rel(pgRepo, trackingdb, "Lee/Escribe eventos y estados de tracking", "PostgreSQL")
+Rel(appService, model, "Usa entidades y objetos de valor")
+Rel(domainService, model, "Usa entidades y objetos de valor")
+Rel(appService, config, "Lee configuración")
+Rel(pgRepo, config, "Lee configuración")
+
+SHOW_FLOATING_LEGEND()
+
+@enduml

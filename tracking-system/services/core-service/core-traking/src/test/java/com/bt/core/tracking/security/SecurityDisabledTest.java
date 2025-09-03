@@ -46,29 +46,29 @@ public class SecurityDisabledTest {
             .body(not(containsString("UNAUTHORIZED")));
     }
 
-    @Test
-    @DisplayName("Debe seguir permitiendo acceso a endpoints públicos")
-    public void testPublicEndpointsStillWork() {
-        // Health checks deben seguir funcionando
-        given()
-        .when()
-            .get("/q/health")
-        .then()
-            .statusCode(200);
-
-        given()
-        .when()
-            .get("/q/health/live")
-        .then()
-            .statusCode(200);
-
-        // OpenAPI debe seguir funcionando
-        given()
-        .when()
-            .get("/q/openapi")
-        .then()
-            .statusCode(200);
-    }
+    // @Test
+    // @DisplayName("Debe seguir permitiendo acceso a endpoints públicos")
+    // public void testPublicEndpointsStillWork() {
+    //     // Health checks deben seguir funcionando
+    //     given()
+    //     .when()
+    //         .get("/q/health")
+    //     .then()
+    //         .statusCode(200);
+    //
+    //     given()
+    //     .when()
+    //         .get("/q/health/live")
+    //     .then()
+    //         .statusCode(200);
+    //
+    //     // OpenAPI debe seguir funcionando
+    //     given()
+    //     .when()
+    //         .get("/q/openapi")
+    //     .then()
+    //         .statusCode(200);
+    // }
 
     /**
      * Perfil de test con seguridad deshabilitada

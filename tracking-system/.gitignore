@@ -178,3 +178,4 @@ local-config/
 *.rar
 *.tar
 *.zip
+services/auth-service/node_modules/
